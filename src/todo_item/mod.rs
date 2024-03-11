@@ -1,4 +1,6 @@
 use chrono::{DateTime, FixedOffset, NaiveDateTime, TimeZone, Utc};
+use uuid::Uuid;
+
 fn format_date(date: DateTime<Utc>) -> String {
     date.format("%d-%m-%Y").to_string()
 }
@@ -28,6 +30,7 @@ pub fn optional_str_to_date(str_date: Option<String>) -> Option<DateTime<Utc>> {
 }
 
 pub struct TodoItem {
+    pub id: Uuid,
     pub description: String,
     pub completed: bool,
     pub created_at: DateTime<Utc>,
@@ -40,6 +43,7 @@ impl TodoItem {
         let now = Utc::now();
         let expires_at = optional_str_to_date(expiry_date);
         TodoItem {
+            id: Uuid::new_v4(),
             description,
             completed: false,
             created_at: now,
@@ -48,13 +52,15 @@ impl TodoItem {
         }
     }
 
-    pub fn toggle_completed(&mut self) {
+    pub fn toggle_completed(&mut self) -> &mut Self {
         self.set_completed(!self.completed);
+        self
     }
 
-    pub fn set_completed(&mut self, completed: bool) {
+    pub fn set_completed(&mut self, completed: bool) -> &mut Self {
         self.completed = completed;
         let now = Utc::now();
         self.completed_at = Some(now);
+        self
     }
 }

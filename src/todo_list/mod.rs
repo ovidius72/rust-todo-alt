@@ -1,3 +1,5 @@
+use uuid::Uuid;
+
 use crate::todo_item::{optional_date_to_str, TodoItem};
 
 pub struct TodoList {
@@ -31,6 +33,18 @@ impl TodoList {
     pub fn toggle_completed(&mut self, index: usize) -> &mut Self {
         self.items[index].toggle_completed();
         self
+    }
+    pub fn toggle_completed_by_id(&mut self, id: Uuid) {
+        let item = self.items.iter_mut().find(|item| item.id == id);
+        // if item.is_some() {
+        //     item.unwrap().toggle_completed();
+        // }
+        match item {
+            Some(i) => {
+                i.toggle_completed();
+            }
+            None => (),
+        }
     }
     pub fn show_all(&mut self) {
         println!("");
